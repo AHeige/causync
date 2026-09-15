@@ -8,4 +8,10 @@ Recovery input may contain user data. Persist only fields required to recover th
 
 Treat `unknown` and `not-found` as uncertainty until authoritative review. Never convert a timeout into rejection, silently replay an unsafe command, or accept client-supplied actor scope. Receipts and coverage predicates are security-sensitive evidence adapters and require hostile-input tests.
 
-Report suspected vulnerabilities privately to the repository maintainers. Do not include credentials, tenant data or exploitable production details in a public issue.
+## Supported versions
+
+Until Causync reaches a stable release, security fixes target the latest `0.x` prerelease published under the npm `next` tag. Older prereleases may be unsupported.
+
+## Reporting a vulnerability
+
+Report suspected vulnerabilities privately through [GitHub private vulnerability reporting](https://github.com/AHeige/causync/security/advisories/new). Do not include credentials, tenant data or exploitable production details in a public issue.

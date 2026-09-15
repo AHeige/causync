@@ -1,5 +1,7 @@
 # Causync roadmap to 1.0
 
+The numbered milestones through 0.8 below describe the original internal extraction work; they were not published npm versions. The first public package candidate is `0.1.0-alpha.1` under the `next` dist-tag.
+
 Causync 1.0 is a stable causal mutation protocol for TypeScript applications. A fast interface is necessary but insufficient: every visible result must remain connected to user intent, ordered against the correct resource and retained until contract-defined evidence covers it.
 
 The roadmap distinguishes core guarantees from host guarantees. Causync owns operation identity, causal ordering, lifecycle, overlays, retry policy and observable state. A host owns authorization, transport, durable idempotency, authoritative result evidence, persistence privacy and external-effect recovery.
@@ -65,17 +67,17 @@ Delivered in 0.7: an async recovery-store contract, a scope-isolated Web Storage
 
 Delivered in 0.8: package-local `llms.txt` and agent rules, versioned contract manifests with deterministic catalogs, a CLI conformance command for host fault harnesses, a generated-file drift check, and a repository guard that rejects increases in direct UI write patterns outside registered surfaces.
 
-## 1.0 — Stable causal mutation protocol ✅
+## 1.0 — Stable causal mutation protocol
 
 Release 1.0 only when all public APIs and recovery formats are stable, the packed package installs independently, the conformance suite verifies supported hosts, security and privacy boundaries are documented, and both event-sourced and conventional transactional reference hosts pass the same fault scenarios.
 
 Exactly-once execution is not a blanket 1.0 promise. Causync supplies stable identity and retry semantics; each authoritative system and external effect must prove its own atomic deduplication and recovery behavior.
 
-Delivered in 1.0: stable ESM and declaration exports, recovery and manifest format v1, independent tarball installation, security and compatibility contracts, a transactional reference harness and Sefira's event-sourced Task host running the shared fault scenarios. The package is release-ready under Apache-2.0; npm publication is a separate maintainer action.
+Before 1.0, Causync still needs at least one independent reference implementation, documented API feedback, stable recovery and persistence, verified browser and SSR compatibility, an explicit semver policy, prerelease migration guidance and confirmation that consumers never need internal imports.
 
-## Post-1.0 adoption and evidence plan
+## Prerelease adoption and evidence plan
 
-This sequence is the canonical plan after 1.0. Changes to its order or guarantees require a linked Sefira task and an explicit decision recorded in delivery evidence.
+This sequence is the canonical evidence plan before a stable 1.0. Changes to its guarantees require an explicit decision recorded in delivery evidence.
 
 1. **Deterministic delivery automation.** Every merge to `dev` must resolve to one canonical deployment of the current `dev` SHA with build and smoke evidence. Bot merges use a trusted Quality Gate handoff plus scheduled reconciliation; human pushes retain the direct push trigger. Delivery owner: `UP-843`.
 2. **Surface-by-surface adoption.** Migrate My Todo, Tasks and Processes first, then comments, conversations, milestones and decisions. Every write declares one registered contract, projection, error classification, receipt and reconciliation rule. The repository gate may shrink legacy exceptions but may not permit new direct UI writes. The first My Todo completion slice is owned by `UP-845`.

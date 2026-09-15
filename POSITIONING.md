@@ -6,7 +6,7 @@ It does not claim that sophisticated optimistic state or sync is new. Collection
 
 The core differentiators are backend independence, per-resource causal lanes, protocol-level uncertainty, operation-level read coverage, recovery without implicit replay, and machine-enforced contracts for human- and AI-written code.
 
-## Post-1.0 roadmap
+## Prerelease and post-1.0 roadmap
 
 1. Publish a transport-neutral Causync Protocol specification with normative lifecycle and evidence vocabulary.
 2. Add `causync init --ai` installers for common coding agents while keeping the canonical rules vendor-neutral.
