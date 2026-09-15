@@ -1,0 +1,102 @@
+{
+  "name": "causync",
+  "version": "1.0.0",
+  "description": "A causal mutation runtime for distributed applications",
+  "keywords": [
+    "optimistic-ui",
+    "typescript",
+    "react",
+    "event-sourcing",
+    "cqrs",
+    "distributed-systems"
+  ],
+  "homepage": "https://www.sefira.se/causync",
+  "type": "module",
+  "private": false,
+  "license": "Apache-2.0",
+  "author": "Logos Origin Sweden AB",
+  "engines": {
+    "node": ">=20"
+  },
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "causync": "./bin/causync.mjs"
+  },
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/testing.js"
+    },
+    "./generator": {
+      "types": "./dist/generator.d.ts",
+      "import": "./dist/generator.js"
+    },
+    "./swr": {
+      "types": "./dist/swr.d.ts",
+      "import": "./dist/swr.js"
+    },
+    "./tanstack-query": {
+      "types": "./dist/tanstack-query.d.ts",
+      "import": "./dist/tanstack-query.js"
+    }
+  },
+  "files": [
+    "bin",
+    "dist",
+    "examples/*.md",
+    "examples/*.sql",
+    "examples/*.mjs",
+    "AGENTS.md",
+    "llms.txt",
+    "README.md",
+    "ROADMAP.md",
+    "POSITIONING.md",
+    "SECURITY.md",
+    "COMPATIBILITY.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "clean": "node --input-type=module -e \"import fs from 'node:fs'; fs.rmSync('dist', { recursive: true, force: true })\"",
+    "build": "npm run clean && tsc -p tsconfig.json && node scripts/finalize-esm.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:package": "node scripts/verify-package.mjs",
+    "verify": "npm run typecheck && npm test && npm run test:package"
+  },
+  "peerDependencies": {
+    "react": ">=18 <20"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AHeige/causync.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AHeige/causync/issues"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.2.3",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "typescript": "6.0.2",
+    "vitest": "4.1.11",
+    "zod": "4.1.8"
+  }
+}

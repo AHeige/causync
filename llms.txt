@@ -1,0 +1,31 @@
+# Causync
+
+A causal mutation runtime for TypeScript applications. Core import: `causync`. Optional adapters: `causync/react`, `causync/swr`, `causync/tanstack-query`, `causync/testing`, `causync/generator`.
+
+## Required mutation pattern
+
+- Define every server write as one registered `createCausyncContract` contract.
+- Choose `optimistic`, `acknowledged`, or `confirmation-first` from what the UI can truthfully claim before evidence arrives.
+- Define a resource key that serializes causally dependent writes while allowing unrelated resources to run in parallel.
+- Use `queue-all` when every activation matters, `latest-unsent` only for replaceable desired values, and `single-flight` only for the same active intention.
+- Validate input and receipt with Standard Schema. Validate input before creating an overlay and receipt before acceptance.
+- Correlate the server receipt to `mutationId`. HTTP success alone is not acceptance evidence.
+- Resolve `reconcile` only from real outcome evidence. In projection systems, distinguish event acceptance from projection confirmation.
+- Fetch through `readCovered` or a cache adapter and prove coverage operation by operation. Keep confirmed overlays until coverage.
+- Classify timeouts and lost responses as `unknown`, not rejection. Preserve the user's intent and recover through mutation status.
+- Retry a write only when the server atomically deduplicates the same mutation ID and payload.
+
+## Forbidden shortcuts
+
+Do not create ad hoc `pending/error/success` mutation state, roll back the whole cache after one rejection, retire overlays on invalidation alone, treat a timer as evidence, deduplicate separate A → B → A intentions, replay persisted writes on load, or claim exactly-once effects from client identity alone.
+
+## Agent loop
+
+1. Add or update the contract manifest and generated catalog.
+2. Implement the host adapter and deterministic fault harness.
+3. Run `causync check --manifest <file> --generated <file>`.
+4. Run `causync conformance --adapter <adapter.mjs>`.
+5. Test rapid input, out-of-order responses, rejection, conflict, lost response, delayed projection, reload and authoritative coverage.
+6. Run the repository mutation registry check so new direct writes fail CI.
+
+Read `README.md`, `ROADMAP.md`, `AGENTS.md`, and `examples/` for the full guarantees and host boundaries.
