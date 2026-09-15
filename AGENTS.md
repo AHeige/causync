@@ -1,5 +1,9 @@
 # Causync agent rules
 
+## Incubation source policy
+
+Until the first Sefira adoption cycle is complete, develop Causync only in the Sefira repository's `packages/causync` package. This repository is a release mirror: synchronize proven checkpoints here, but do not implement a parallel version or publish a new npm release during incubation.
+
 When implementing a server mutation in a TypeScript UI:
 
 1. Register one typed Causync contract before wiring the control.
