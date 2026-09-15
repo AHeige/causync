@@ -264,6 +264,28 @@ export function createMutationJournal<I, R>(options: {
       pump(entry.operation.resource)
     },
 
+    /** Attach an authoritative receipt to an operation that was restored as uncertain. */
+    async resumeAccepted(id: string, receipt: R): Promise<R> {
+      const entry = entries.find(candidate => candidate.operation.id === id)
+      if (!entry) throw new Error('Unknown mutation')
+      if (running.has(entry.operation.resource)) throw new Error('Mutation is already running')
+      if (entry.operation.phase !== 'uncertain') {
+        throw new Error('Only unresolved operations can resume from a receipt')
+      }
+      entry.promise = new Promise<R>((resolve, reject) => {
+        entry.resolve = resolve
+        entry.reject = reject
+      })
+      void entry.promise.catch(() => {})
+      transition(entry, {
+        phase: 'pending',
+        receipt: structuredClone(receipt),
+        error: undefined,
+      })
+      void execute(entry)
+      return entry.promise
+    },
+
     getSnapshot: () => snapshot,
 
     /** The host must perform an uncached, authoritative read. Capture before I/O. */

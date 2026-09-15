@@ -102,6 +102,19 @@ describe('Causync contract', () => {
     h.writes[1].result.resolve('A'); await retry
   })
 
+  it('resumes a restored operation from an authoritative receipt without replaying the write', async () => {
+    const h = harness()
+    h.journal.restore(h.contract, { id: 'restored-1', input: { resource: 'one', value: 'A' } })
+    expect(h.journal.getSnapshot()[0].phase).toBe('uncertain')
+    await h.journal.resumeAccepted('restored-1', 'authoritative-receipt')
+    expect(h.writes).toHaveLength(0)
+    expect(h.journal.getSnapshot()[0]).toMatchObject({
+      id: 'restored-1',
+      phase: 'confirmed',
+      receipt: 'authoritative-receipt',
+    })
+  })
+
   it('fences reads at request start, so late old reads cannot claim coverage', async () => {
     const h = harness(); const slowRead = deferred<string>(); const stale = h.journal.read(() => slowRead.promise)
     const a = h.submit('A'); h.writes[0].result.resolve('A'); await a.settled
