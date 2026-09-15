@@ -4,7 +4,20 @@
 
 Causync combines *causal* and *sync*: every visible change remains connected to the user intent that caused it and the evidence that eventually confirms it. It is a causal mutation runtime for frontend applications. It models user intent, provisional state, server acceptance, projection evidence and recovery explicitly. React is an optional adapter; the core imports no framework, cache, database or Sefira code.
 
-Version 1.0 is a release-ready source package. It includes the public fault lab, independent package verification, finite-JSON recovery, coverage-aware compaction, host conformance, Standard Schema contracts, machine-readable generation, framework adapters, durable recovery primitives and AI-facing enforcement. The Sefira host adapter lives outside this directory in `lib/mutations`. Publishing to npm is a separate maintainer action.
+The current release line is `0.1.0-alpha`. It is intentionally published under the npm `next` tag while the API is exercised in independent applications. It includes independent package verification, finite-JSON recovery, coverage-aware compaction, host conformance, Standard Schema contracts, machine-readable generation, framework adapters and durable recovery primitives. Causync does not include Sefira or any other host application.
+
+## Public entrypoints
+
+| Import | Environment | Supported surface |
+| --- | --- | --- |
+| `causync` | Modern ESM browsers and Node.js 20+ | Framework-neutral journal, contracts, recovery, persistence and browser coordination |
+| `causync/react` | React 18 or 19 | Provider, hooks, presentation-state mapping and unstyled devtools |
+| `causync/testing` | Test and conformance environments | Deterministic harnesses and conformance runners |
+| `causync/generator` | Modern ESM runtimes | Dependency-free manifest-to-TypeScript generation |
+| `causync/swr` | Modern ESM browsers and Node.js 20+ | Structural SWR read/coverage adapter; no SWR dependency |
+| `causync/tanstack-query` | Modern ESM browsers and Node.js 20+ | Structural TanStack Query read/coverage adapter; no TanStack dependency |
+
+Only these package entrypoints are public. Imports from `causync/dist/...` are unsupported and blocked by the package export map. Causync is ESM-only. The `causync` core has no runtime dependencies; React is an optional peer dependency and is required only when importing `causync/react`. The `causync` CLI is Node-only. No entrypoint assumes Next.js, Sefira, event sourcing, SWR or TanStack Query.
 
 ## Interaction contract
 
@@ -95,4 +108,4 @@ Build with `npm run build` and verify the complete standalone package with `npm 
 
 Durable server deduplication, atomic expected-version enforcement across **all** writers, offline replay and multi-tab command coordination require host implementations and independent server tests. None is implied by a fast UI. See `SECURITY.md` and `COMPATIBILITY.md` before adopting recovery or retry.
 
-The staged release criteria live in [ROADMAP.md](./ROADMAP.md). The public `/causync` fault lab demonstrates current behavior; a scenario shown there is not a claim that Causync supplies the host-side guarantee by itself.
+The staged release criteria live in [ROADMAP.md](./ROADMAP.md). `1.0.0` and the npm `latest` tag remain reserved until external adoption, API feedback, recovery and persistence evidence, browser/SSR verification, a semver policy and prerelease migration guidance are complete.

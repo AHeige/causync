@@ -1,0 +1,45 @@
+name: Release npm prerelease
+
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: npm-release-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish to npm next
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the released tag
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - name: Set up Node.js and npm registry
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - name: Install a Trusted Publishing compatible npm CLI
+        run: npm install --global npm@11.5.1
+      - name: Verify release identity
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          node --input-type=module -e "import pkg from './package.json' with { type: 'json' }; if (process.env.RELEASE_TAG !== 'v' + pkg.version) throw new Error('Release tag must equal v' + pkg.version); if (!pkg.version.includes('-')) throw new Error('Stable releases are disabled while Causync is in prerelease')"
+      - name: Install dependencies
+        run: npm ci
+      - name: Verify source, tests, build, package, consumer and CLI
+        run: npm run verify
+      - name: Inspect publish file list
+        run: npm pack --dry-run
+      - name: Publish prerelease with npm Trusted Publishing
+        run: npm publish --tag next
