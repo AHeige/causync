@@ -1,6 +1,6 @@
 # Causync
 
-A causal mutation runtime for TypeScript applications. Core import: `causync`. Optional adapters: `causync/react`, `causync/swr`, `causync/tanstack-query`, `causync/testing`, `causync/generator`.
+A causal mutation runtime for TypeScript applications. Core import: `@causync/core`. Optional adapters: `@causync/core/react`, `@causync/core/swr`, `@causync/core/tanstack-query`, `@causync/core/testing`, `@causync/core/generator`.
 
 ## Required mutation pattern
 

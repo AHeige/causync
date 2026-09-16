@@ -19,7 +19,7 @@ try {
   const tarball = path.join(temporaryRoot, pack.filename)
   const packageFiles = new Set(pack.files.map(file => file.path))
   const packageMetadata = JSON.parse(fs.readFileSync(path.join(packageRoot, 'package.json'), 'utf8'))
-  invariant(pack.name === 'causync', `Packed unexpected package: ${pack.name}`)
+  invariant(pack.name === '@causync/core', `Packed unexpected package: ${pack.name}`)
   invariant(pack.version === packageMetadata.version, `Packed unexpected version: ${pack.version}`)
   for (const entrypoint of publicEntrypoints) {
     invariant(packageFiles.has(`dist/${entrypoint}.js`), `Packed ${entrypoint} JavaScript is missing`)
@@ -39,18 +39,18 @@ try {
   fs.writeFileSync(path.join(fixture, 'package.json'), JSON.stringify({ name: 'causync-install-fixture', private: true, type: 'module' }))
   fs.writeFileSync(path.join(fixture, 'verify.mjs'), `
     import fs from 'node:fs'
-    import { createCausyncContract, createMutationJournal, createStorageRecoveryStore } from 'causync'
-    import { generateContractModule } from 'causync/generator'
-    import { deferred } from 'causync/testing'
-    import { createCausyncSWRAdapter } from 'causync/swr'
-    import { createCausyncQueryAdapter } from 'causync/tanstack-query'
+    import { createCausyncContract, createMutationJournal, createStorageRecoveryStore } from '@causync/core'
+    import { generateContractModule } from '@causync/core/generator'
+    import { deferred } from '@causync/core/testing'
+    import { createCausyncSWRAdapter } from '@causync/core/swr'
+    import { createCausyncQueryAdapter } from '@causync/core/tanstack-query'
     if (typeof deferred !== 'function') throw new Error('Testing export is unavailable')
     if (typeof createCausyncContract !== 'function') throw new Error('Strict contract factory is unavailable')
     if (typeof createStorageRecoveryStore !== 'function') throw new Error('Recovery store export is unavailable')
     if (typeof generateContractModule !== 'function') throw new Error('Generator export is unavailable')
     if (typeof createCausyncSWRAdapter !== 'function') throw new Error('SWR adapter export is unavailable')
     if (typeof createCausyncQueryAdapter !== 'function') throw new Error('TanStack Query adapter export is unavailable')
-    const installed = JSON.parse(fs.readFileSync(new URL('./node_modules/causync/package.json', import.meta.url), 'utf8'))
+    const installed = JSON.parse(fs.readFileSync(new URL('./node_modules/@causync/core/package.json', import.meta.url), 'utf8'))
     if (installed.version !== '${packageMetadata.version}') throw new Error('Installed package version is incorrect')
     if (installed.dependencies) throw new Error('Core package unexpectedly has runtime dependencies')
     if (fs.existsSync(new URL('./node_modules/react', import.meta.url))) throw new Error('Optional React peer was installed with the core package')
@@ -59,7 +59,7 @@ try {
     }
     let internalImportBlocked = false
     try {
-      await import('causync/dist/index.js')
+      await import('@causync/core/dist/index.js')
     } catch (error) {
       internalImportBlocked = error?.code === 'ERR_PACKAGE_PATH_NOT_EXPORTED'
     }
@@ -91,18 +91,18 @@ try {
     '--ignore-scripts', '--no-package-lock', '--no-audit', '--no-fund',
   ], { cwd: fixture, stdio: 'inherit' })
   fs.writeFileSync(path.join(fixture, 'verify-react.mjs'), `
-    import { CausyncProvider, toCausyncPresentationState } from 'causync/react'
+    import { CausyncProvider, toCausyncPresentationState } from '@causync/core/react'
     if (typeof CausyncProvider !== 'function') throw new Error('React provider export is unavailable')
     if (toCausyncPresentationState('uncertain') !== 'needs-attention') throw new Error('React adapter behavior is unavailable')
     console.log('Packed Causync React fixture PASS')
   `)
   fs.writeFileSync(path.join(fixture, 'verify-types.ts'), `
-    import { createMutationJournal, type Contract } from 'causync'
-    import { CausyncProvider } from 'causync/react'
-    import { generateContractModule } from 'causync/generator'
-    import { deferred, type ConformanceReport } from 'causync/testing'
-    import { createCausyncSWRAdapter } from 'causync/swr'
-    import { createCausyncQueryAdapter } from 'causync/tanstack-query'
+    import { createMutationJournal, type Contract } from '@causync/core'
+    import { CausyncProvider } from '@causync/core/react'
+    import { generateContractModule } from '@causync/core/generator'
+    import { deferred, type ConformanceReport } from '@causync/core/testing'
+    import { createCausyncSWRAdapter } from '@causync/core/swr'
+    import { createCausyncQueryAdapter } from '@causync/core/tanstack-query'
     const journal = createMutationJournal<unknown, unknown>()
     const exportsAreTyped: readonly unknown[] = [
       journal, CausyncProvider, generateContractModule, deferred,
@@ -140,18 +140,18 @@ try {
     }],
   }))
   execFileSync(process.execPath, [
-    path.join(fixture, 'node_modules', 'causync', 'bin', 'causync.mjs'),
+    path.join(fixture, 'node_modules', '@causync', 'core', 'bin', 'causync.mjs'),
     'generate', '--manifest', manifestPath, '--out', outputPath,
   ], { cwd: fixture, stdio: 'inherit' })
   const generated = fs.readFileSync(outputPath, 'utf8')
   if (!generated.includes("export type CausyncAction")) throw new Error('CLI did not generate action types')
   execFileSync(process.execPath, [
-    path.join(fixture, 'node_modules', 'causync', 'bin', 'causync.mjs'),
+    path.join(fixture, 'node_modules', '@causync', 'core', 'bin', 'causync.mjs'),
     'check', '--manifest', manifestPath, '--generated', outputPath,
   ], { cwd: fixture, stdio: 'inherit' })
   execFileSync(process.execPath, [
-    path.join(fixture, 'node_modules', 'causync', 'bin', 'causync.mjs'),
-    'conformance', '--adapter', path.join(fixture, 'node_modules', 'causync', 'examples', 'transactional-conformance-adapter.mjs'),
+    path.join(fixture, 'node_modules', '@causync', 'core', 'bin', 'causync.mjs'),
+    'conformance', '--adapter', path.join(fixture, 'node_modules', '@causync', 'core', 'examples', 'transactional-conformance-adapter.mjs'),
   ], { cwd: fixture, stdio: 'inherit' })
 } finally {
   fs.rmSync(temporaryRoot, { recursive: true, force: true })

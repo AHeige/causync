@@ -1,5 +1,5 @@
-import { createMutationJournal, MutationFailure } from 'causync'
-import { deferred } from 'causync/testing'
+import { createMutationJournal, MutationFailure } from '@causync/core'
+import { deferred } from '@causync/core/testing'
 
 function create() {
   let sequence = 0
