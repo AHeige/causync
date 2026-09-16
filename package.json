@@ -1,5 +1,5 @@
 {
-  "name": "causync",
+  "name": "@causync/core",
   "version": "0.1.0-alpha.1",
   "description": "A causal mutation runtime for distributed applications",
   "keywords": [

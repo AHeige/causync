@@ -8,10 +8,10 @@ The package must exist on npm before a trusted publisher can be attached to it. 
 
 1. Run `npm login` locally. Never create or commit an automation token.
 2. Confirm `npm whoami` is the intended initial owner and confirm write-protected 2FA in the npm account settings.
-3. Confirm `npm config get registry` returns `https://registry.npmjs.org/` and `npm view causync` still returns `E404`.
+3. Confirm `npm config get registry` returns `https://registry.npmjs.org/` and `npm view @causync/core` still returns `E404`.
 4. Run `npm ci`, `npm run verify`, and `npm pack --dry-run`.
 5. Publish exactly `npm publish --tag next`.
-6. Verify `npm view causync@next` and install `causync@next` in a separate minimal TypeScript/React project.
+6. Verify `npm view @causync/core@next` and install `@causync/core@next` in a separate minimal TypeScript/React project.
 
 The bootstrap publish is authenticated interactively and does not claim GitHub Actions provenance. All subsequent releases use Trusted Publishing.
 

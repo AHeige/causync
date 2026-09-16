@@ -10,14 +10,14 @@ The current release line is `0.1.0-alpha`. It is intentionally published under t
 
 | Import | Environment | Supported surface |
 | --- | --- | --- |
-| `causync` | Modern ESM browsers and Node.js 20+ | Framework-neutral journal, contracts, recovery, persistence and browser coordination |
-| `causync/react` | React 18 or 19 | Provider, hooks, presentation-state mapping and unstyled devtools |
-| `causync/testing` | Test and conformance environments | Deterministic harnesses and conformance runners |
-| `causync/generator` | Modern ESM runtimes | Dependency-free manifest-to-TypeScript generation |
-| `causync/swr` | Modern ESM browsers and Node.js 20+ | Structural SWR read/coverage adapter; no SWR dependency |
-| `causync/tanstack-query` | Modern ESM browsers and Node.js 20+ | Structural TanStack Query read/coverage adapter; no TanStack dependency |
+| `@causync/core` | Modern ESM browsers and Node.js 20+ | Framework-neutral journal, contracts, recovery, persistence and browser coordination |
+| `@causync/core/react` | React 18 or 19 | Provider, hooks, presentation-state mapping and unstyled devtools |
+| `@causync/core/testing` | Test and conformance environments | Deterministic harnesses and conformance runners |
+| `@causync/core/generator` | Modern ESM runtimes | Dependency-free manifest-to-TypeScript generation |
+| `@causync/core/swr` | Modern ESM browsers and Node.js 20+ | Structural SWR read/coverage adapter; no SWR dependency |
+| `@causync/core/tanstack-query` | Modern ESM browsers and Node.js 20+ | Structural TanStack Query read/coverage adapter; no TanStack dependency |
 
-Only these package entrypoints are public. Imports from `causync/dist/...` are unsupported and blocked by the package export map. Causync is ESM-only. The `causync` core has no runtime dependencies; React is an optional peer dependency and is required only when importing `causync/react`. The `causync` CLI is Node-only. No entrypoint assumes Next.js, Sefira, event sourcing, SWR or TanStack Query.
+Only these package entrypoints are public. Imports from `@causync/core/dist/...` are unsupported and blocked by the package export map. Causync is ESM-only. The `@causync/core` package has no runtime dependencies; React is an optional peer dependency and is required only when importing `@causync/core/react`. The `causync` CLI is Node-only. No entrypoint assumes Next.js, Sefira, event sourcing, SWR or TanStack Query.
 
 ## Interaction contract
 
@@ -32,7 +32,7 @@ The core does not show dialogs or manufacture successful outcomes. Loading remai
 ## Core API
 
 ```ts
-import { createMutationJournal, createMutationRegistry, type Contract } from 'causync'
+import { createMutationJournal, createMutationRegistry, type Contract } from '@causync/core'
 
 type Input = { action: 'item.title.set'; itemId: string; desiredTitle: string }
 type Receipt = { mutationId: string; itemId: string; eventId: string }
@@ -96,15 +96,15 @@ Journal history is unbounded unless the host explicitly calls `compact`. Compact
 
 ## React
 
-`CausyncProvider`, `useCausyncJournal`, `useCausyncOperations` and `useMutationJournal` from `causync/react` use `useSyncExternalStore`. `createScopedJournalRegistry` owns journals by an authenticated host scope such as `tenant:user`; clear that scope on sign-out. A component's unmount must not cancel or forget accepted work. `CausyncDevtools` is an unstyled development inspector.
+`CausyncProvider`, `useCausyncJournal`, `useCausyncOperations` and `useMutationJournal` from `@causync/core/react` use `useSyncExternalStore`. `createScopedJournalRegistry` owns journals by an authenticated host scope such as `tenant:user`; clear that scope on sign-out. A component's unmount must not cancel or forget accepted work. `CausyncDevtools` is an unstyled development inspector.
 
-`causync/swr` and `causync/tanstack-query` are structural adapters with no runtime dependency on either cache. Their read methods require an operation-level `covers` predicate and return the exact confirmed IDs evidenced by the fetched value. The cache remains a read transport; it never becomes mutation authority. See `examples/nextjs-boundaries.md`.
+`@causync/core/swr` and `@causync/core/tanstack-query` are structural adapters with no runtime dependency on either cache. Their read methods require an operation-level `covers` predicate and return the exact confirmed IDs evidenced by the fetched value. The cache remains a read transport; it never becomes mutation authority. See `examples/nextjs-boundaries.md`.
 
 ## Verification and release boundary
 
 Build with `npm run build` and verify the complete standalone package with `npm run verify`. The core conformance tests are in `tests/causync.test.ts`; `testing` exports deterministic deferred promises for adapters and fault injection.
 
-`runHostConformance` from `causync/testing` runs shared lifecycle invariants against a real host contract wired to controlled transport. Its samples provide A → B → A on one resource, a duplicate and an independent resource. The runner verifies immediate publication, repeated-input policy, resource order, parallel resources, selective rejection, conflict/unknown pauses, retry identity policy and read fences. `runDelayedConfirmationConformance` separately proves accepted, confirmed and covered boundaries for projection-based hosts. `assertHostConformance` turns either structured report into a failing test. Sefira's event-sourced Task adapter and the packaged transactional reference harness run the exported base suite; production persistence and server idempotency still require host integration tests.
+`runHostConformance` from `@causync/core/testing` runs shared lifecycle invariants against a real host contract wired to controlled transport. Its samples provide A → B → A on one resource, a duplicate and an independent resource. The runner verifies immediate publication, repeated-input policy, resource order, parallel resources, selective rejection, conflict/unknown pauses, retry identity policy and read fences. `runDelayedConfirmationConformance` separately proves accepted, confirmed and covered boundaries for projection-based hosts. `assertHostConformance` turns either structured report into a failing test. Sefira's event-sourced Task adapter and the packaged transactional reference harness run the exported base suite; production persistence and server idempotency still require host integration tests.
 
 Durable server deduplication, atomic expected-version enforcement across **all** writers, offline replay and multi-tab command coordination require host implementations and independent server tests. None is implied by a fast UI. See `SECURITY.md` and `COMPATIBILITY.md` before adopting recovery or retry.
 
